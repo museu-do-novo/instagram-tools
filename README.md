@@ -65,13 +65,13 @@ json
 
 ## Observações
 
-    # Privacidade: O programa só acessa perfis públicos ou perfis aos quais você tem permissão de visualização.
-    # Login Persistente: Para segurança, as sessões são salvas no dispositivo local.
+Privacidade: O programa só acessa perfis públicos ou perfis aos quais você tem permissão de visualização.
+Login Persistente: Para segurança, as sessões são salvas no dispositivo local.
 
 ## Erros Comuns
 
-    Erro de Login: Pode ocorrer caso o nome de usuário ou senha estejam incorretos, ou se houver problemas de conexão.
-    Acesso Negado ao Perfil: Certifique-se de que o perfil alvo é público ou acessível.
+  Erro de Login: Pode ocorrer caso o nome de usuário ou senha estejam incorretos, ou se houver problemas de conexão.
+  Acesso Negado ao Perfil: Certifique-se de que o perfil alvo é público ou acessível.
 
 ==============================================================================================================================================
 
