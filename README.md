@@ -73,7 +73,7 @@ Login Persistente: Para segurança, as sessões são salvas no dispositivo local
   Erro de Login: Pode ocorrer caso o nome de usuário ou senha estejam incorretos, ou se houver problemas de conexão.
   Acesso Negado ao Perfil: Certifique-se de que o perfil alvo é público ou acessível.
 
-==============================================================================================================================================
+===================================================================================================================
 
 # InstaStoryDownloader
 
