@@ -48,8 +48,7 @@ def baixar_stories(perfil, L, usuario_alvo):
         print(f"{usuario_alvo} não tem stories públicos no momento.")
 
 def iniciar_download_stories():
-    if input("Deseja limpar a tela antes de iniciar? (s/n): ").lower() == 's':
-        os.system("clear")
+    os.system("clear")
 
     # Dados de login
     seu_usuario = input("Digite seu nome de usuário do Instagram: ")
