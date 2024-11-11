@@ -1,65 +1,61 @@
 import instaloader
 import os
 import json
-import time
+from colorama import Fore, Style, init
 
-def realizar_login(L, usuario, senha):
-    """Realiza o login no Instagram e salva a sessão."""
-    if os.path.exists(f"{usuario}.session"):
-        try:
-            L.load_session_from_file(usuario)
-            print(f"Login bem-sucedido com sessão salva para {usuario}.")
-            return True
-        except Exception as e:
-            print(f"Erro ao carregar sessão salva: {e}")
+# Inicializa o colorama para cores no terminal
+init(autoreset=True)
+os.system("clear")
+
+def carregar_sessao(L):
+    """Carregar a sessão salva ou fazer login e salvar uma nova sessão."""
+    nome_de_usuario = input("Digite seu nome de usuário: ")
     
-    # Tenta login caso não haja sessão ou se o carregamento falhar
-    for tentativa in range(3):
-        try:
-            L.login(usuario, senha)
-            if input("Salvar sessão para logins futuros? (s/n): ").lower() == 's':
-                L.save_session_to_file()
-                print("Sessão salva com sucesso.")
-            return True
-        except Exception as e:
-            print(f"Tentativa {tentativa + 1}/3 - Erro ao fazer login: {e}")
-            if tentativa < 2:
-                print("Tentando novamente...")
-                time.sleep(2)
-    return False
+    try:
+        # Tentar carregar a sessão salva
+        L.load_session_from_file(nome_de_usuario)
+        print(Fore.GREEN + f"Sessão carregada com sucesso para {nome_de_usuario}.")
+    except FileNotFoundError:
+        print(Fore.YELLOW + "Sessão não encontrada. Fazendo login...")
+
+        # Solicita a senha somente se a sessão não for encontrada
+        senha = input("Digite sua senha: ")
+        L.login(nome_de_usuario, senha)
+        L.save_session_to_file()
+        print(Fore.GREEN + "Sessão salva com sucesso.")
 
 def carregar_perfil(L, usuario_alvo):
     """Carrega o perfil do usuário alvo no Instagram."""
     try:
         perfil = instaloader.Profile.from_username(L.context, usuario_alvo)
-        print(f"Perfil {usuario_alvo} carregado.")
+        print(Fore.GREEN + f"Perfil {usuario_alvo} carregado com sucesso.")
         return perfil
     except Exception as e:
-        print(f"Erro ao carregar o perfil {usuario_alvo}: {e}")
+        print(Fore.RED + f"Erro ao carregar o perfil {usuario_alvo}: {e}")
         return None
 
 def coletar_seguidores(perfil):
     """Coleta a lista de seguidores de um perfil."""
     seguidores = []
     try:
-        print(f"Coletando seguidores de {perfil.username}...")
+        print(Fore.CYAN + f"Coletando seguidores de {perfil.username}...")
         for follower in perfil.get_followers():
             seguidores.append(follower.username)
-        print(f"{len(seguidores)} seguidores coletados.")
+        print(Fore.GREEN + f"{len(seguidores)} seguidores coletados.")
     except Exception as e:
-        print(f"Erro ao coletar seguidores: {e}")
+        print(Fore.RED + f"Erro ao coletar seguidores: {e}")
     return seguidores
 
 def coletar_seguidos(perfil):
     """Coleta a lista de perfis seguidos por um perfil."""
     seguidos = []
     try:
-        print(f"Coletando perfis seguidos por {perfil.username}...")
+        print(Fore.CYAN + f"Coletando perfis seguidos por {perfil.username}...")
         for following in perfil.get_followees():
             seguidos.append(following.username)
-        print(f"{len(seguidos)} seguidos coletados.")
+        print(Fore.GREEN + f"{len(seguidos)} seguidos coletados.")
     except Exception as e:
-        print(f"Erro ao coletar perfis seguidos: {e}")
+        print(Fore.RED + f"Erro ao coletar perfis seguidos: {e}")
     return seguidos
 
 def salvar_dados(usuario_alvo, seguidores, seguidos):
@@ -70,17 +66,15 @@ def salvar_dados(usuario_alvo, seguidores, seguidos):
     }
     with open(f"{usuario_alvo}_dados.json", 'w') as f:
         json.dump(dados, f, indent=4)
-    print(f"Dados de {usuario_alvo} salvos em {usuario_alvo}_dados.json")
+    print(Fore.GREEN + f"Dados de {usuario_alvo} salvos em {usuario_alvo}_dados.json")
 
 def listar_seguidores_e_seguidos():
     L = instaloader.Instaloader()
-    usuario = input("Digite seu nome de usuário do Instagram: ")
-    senha = input("Digite sua senha do Instagram: ")
 
-    if not realizar_login(L, usuario, senha):
-        print("Falha no login após 3 tentativas. Encerrando o programa.")
-        return
+    # Carregar a sessão ou fazer login
+    carregar_sessao(L)
 
+    # Definir o usuário alvo e iniciar o processo de coleta
     usuario_alvo = input("Digite o nome do perfil alvo: ")
     perfil = carregar_perfil(L, usuario_alvo)
     if perfil is None:
@@ -90,7 +84,7 @@ def listar_seguidores_e_seguidos():
     seguidos = coletar_seguidos(perfil)
     salvar_dados(usuario_alvo, seguidores, seguidos)
 
-    print(f"{usuario_alvo} possui {len(seguidores)} seguidores e segue {len(seguidos)} perfis.")
+    print(Fore.CYAN + f"\nResumo: {usuario_alvo} possui {len(seguidores)} seguidores e segue {len(seguidos)} perfis.")
 
 # Executa a função principal
 listar_seguidores_e_seguidos()
